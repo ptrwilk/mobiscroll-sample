@@ -8,8 +8,16 @@ import {
   CalendarToday,
 } from "@mobiscroll/react-next";
 
-const useRenderHeader = () => {
+const useRenderHeader = (onBeforeZoomChange?: () => void) => {
   const { zoomLevel, setZoomLevel } = useZoomLevel();
+
+  const wrappedSetZoomlevel = useCallback(
+    (level: number) => {
+      if (level !== zoomLevel) onBeforeZoomChange?.();
+      setZoomLevel(level);
+    },
+    [onBeforeZoomChange, setZoomLevel, zoomLevel],
+  );
 
   return useCallback(
     () => (
@@ -18,10 +26,13 @@ const useRenderHeader = () => {
         <CalendarToday />
         <CalendarNext />
         <CalendarNav />
-        <TimelineButton zoomlevel={zoomLevel} setZoomlevel={setZoomLevel} />
+        <TimelineButton
+          zoomlevel={zoomLevel}
+          setZoomlevel={wrappedSetZoomlevel}
+        />
       </div>
     ),
-    [zoomLevel, setZoomLevel]
+    [zoomLevel, wrappedSetZoomlevel],
   );
 };
 

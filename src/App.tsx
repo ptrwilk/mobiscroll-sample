@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useCallback } from "react";
 import {
   Eventcalendar,
   MbscCalendarEvent,
   MbscEventcalendarView,
+  MbscSelectedDateChangeEvent,
   luxonTimezone,
   setOptions,
 } from "@mobiscroll/react-next";
@@ -82,11 +83,31 @@ type ViewMode = "timeline" | "schedule" | "calendar" | "agenda";
 function App() {
   const [viewMode, setViewMode] = useState<ViewMode>("timeline");
 
-  const { fromDate, onDateChange } = useCalendarPageStartDate();
+  const { fromDate, selectedDate, onDateChange } = useCalendarPageStartDate();
 
   const { zoomLevel, setZoomLevel } = useZoomLevel();
 
-  const renderHeader = useRenderHeader();
+  const skipZoomDateChangeRef = useRef(false);
+
+  const handleBeforeZoomChange = useCallback(() => {
+    skipZoomDateChangeRef.current = true;
+    setTimeout(() => {
+      skipZoomDateChangeRef.current = false;
+    }, 100);
+  }, []);
+
+  const renderHeader = useRenderHeader(handleBeforeZoomChange);
+
+  const safeOnDateChange = useCallback(
+    (args: MbscSelectedDateChangeEvent) => {
+      if (skipZoomDateChangeRef.current) {
+        skipZoomDateChangeRef.current = false;
+        return;
+      }
+      onDateChange(args);
+    },
+    [onDateChange],
+  );
 
   const view = useMemo<MbscEventcalendarView>(() => {
     switch (viewMode) {
@@ -152,11 +173,12 @@ function App() {
             >
               {mode.charAt(0).toUpperCase() + mode.slice(1)}
             </button>
-          )
+          ),
         )}
       </div>
       <div style={{ flex: 1 }}>
         <Eventcalendar
+          // key={`${viewMode}-${zoomLevel}`}
           renderHeader={renderHeader}
           data={events}
           resources={viewMode === "timeline" ? resources : undefined}
@@ -169,9 +191,9 @@ function App() {
           dragToCreate={true}
           dragToMove={true}
           dragToResize={true}
-          defaultSelectedDate={fromDate}
+          selectedDate={selectedDate}
           refDate={fromDate}
-          onSelectedDateChange={onDateChange}
+          onSelectedDateChange={safeOnDateChange}
           zoomLevel={zoomLevel}
         />
       </div>
