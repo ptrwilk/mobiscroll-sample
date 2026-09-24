@@ -6,8 +6,8 @@ import {
   MbscSelectedDateChangeEvent,
   luxonTimezone,
   setOptions,
-} from "@mobiscroll/react-next";
-import "@mobiscroll/react-next/dist/css/mobiscroll.min.css";
+} from "@mobiscroll/react";
+import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 import { useCalendarPageStartDate } from "./useCalendarPageStartDate";
 import { useRenderHeader } from "./hooks/useRenderHeader";
 import { useZoomLevel } from "./ZoomLevelContext/useZoomLevel";
@@ -69,6 +69,15 @@ const events: MbscCalendarEvent[] = [
     title: "Warsztaty UX",
     resource: 3,
     color: "#8e24aa",
+  },
+  {
+    id: 7,
+    start: luxon.DateTime.now().minus({ days: 1 }).toFormat("yyyy-MM-dd"),
+    end: luxon.DateTime.now().plus({ days: 2 }).toFormat("yyyy-MM-dd"),
+    allDay: true,
+    title: "Wydarzenie całodniowe",
+    resource: 1,
+    color: "#0b8043",
   },
 ];
 

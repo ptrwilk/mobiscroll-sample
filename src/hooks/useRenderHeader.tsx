@@ -6,7 +6,7 @@ import {
   CalendarPrev,
   CalendarNext,
   CalendarToday,
-} from "@mobiscroll/react-next";
+} from "@mobiscroll/react";
 
 const useRenderHeader = (onBeforeZoomChange?: () => void) => {
   const { zoomLevel, setZoomLevel } = useZoomLevel();
