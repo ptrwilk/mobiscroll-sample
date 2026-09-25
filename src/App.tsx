@@ -89,8 +89,21 @@ const resources = [
 
 type ViewMode = "timeline" | "schedule" | "calendar" | "agenda";
 
+const timezones = [
+  "local",
+  "utc",
+  "Europe/Warsaw",
+  "Europe/London",
+  "America/New_York",
+  "America/Los_Angeles",
+  "Asia/Singapore",
+  "Asia/Tokyo",
+  "Australia/Sydney",
+];
+
 function App() {
-  const [viewMode, setViewMode] = useState<ViewMode>("timeline");
+  const [viewMode, setViewMode] = useState<ViewMode>("schedule");
+  const [displayTimezone, setDisplayTimezone] = useState("utc");
 
   const { fromDate, selectedDate, onDateChange } = useCalendarPageStartDate();
 
@@ -184,6 +197,17 @@ function App() {
             </button>
           ),
         )}
+        <select
+          value={displayTimezone}
+          onChange={(e) => setDisplayTimezone(e.target.value)}
+          style={{ marginLeft: "auto", padding: 8, borderRadius: 4 }}
+        >
+          {timezones.map((tz) => (
+            <option key={tz} value={tz}>
+              {tz}
+            </option>
+          ))}
+        </select>
       </div>
       <div style={{ flex: 1 }}>
         <Eventcalendar
@@ -194,6 +218,7 @@ function App() {
           timezonePlugin={luxonTimezone}
           view={view}
           dataTimezone="utc"
+          displayTimezone={displayTimezone}
           timeFormat="HH:mm"
           showControls={true}
           clickToCreate={true}
