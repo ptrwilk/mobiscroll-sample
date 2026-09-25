@@ -1,4 +1,4 @@
-import { MbscTimelineZoomLevel } from "@mobiscroll/react-next";
+import { MbscTimelineZoomLevel } from "@mobiscroll/react";
 
 const DEFAULT_SCHEDULE_ZOOM_LEVEL = 6;
 const DEFAULT_TIMELINE_ZOOM_LEVEL = 4;

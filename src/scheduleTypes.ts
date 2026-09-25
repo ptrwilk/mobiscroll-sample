@@ -1,4 +1,4 @@
-import { MbscEventcalendarView } from "@mobiscroll/react-next";
+import { MbscEventcalendarView } from "@mobiscroll/react";
 
 type ScheduleTypes = keyof Pick<MbscEventcalendarView, 'schedule' | 'timeline'>;
 

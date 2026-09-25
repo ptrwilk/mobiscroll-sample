@@ -6,8 +6,8 @@ import {
   MbscSelectedDateChangeEvent,
   luxonTimezone,
   setOptions,
-} from "@mobiscroll/react-next";
-import "@mobiscroll/react-next/dist/css/mobiscroll.min.css";
+} from "@mobiscroll/react";
+import "@mobiscroll/react/dist/css/mobiscroll.min.css";
 import { useCalendarPageStartDate } from "./useCalendarPageStartDate";
 import { useRenderHeader } from "./hooks/useRenderHeader";
 import { useZoomLevel } from "./ZoomLevelContext/useZoomLevel";
@@ -70,6 +70,15 @@ const events: MbscCalendarEvent[] = [
     resource: 3,
     color: "#8e24aa",
   },
+  {
+    id: 7,
+    start: luxon.DateTime.now().minus({ days: 1 }).toFormat("yyyy-MM-dd"),
+    end: luxon.DateTime.now().plus({ days: 2 }).toFormat("yyyy-MM-dd"),
+    allDay: true,
+    title: "Wydarzenie całodniowe",
+    resource: 1,
+    color: "#0b8043",
+  },
 ];
 
 const resources = [
@@ -80,8 +89,21 @@ const resources = [
 
 type ViewMode = "timeline" | "schedule" | "calendar" | "agenda";
 
+const timezones = [
+  "local",
+  "utc",
+  "Europe/Warsaw",
+  "Europe/London",
+  "America/New_York",
+  "America/Los_Angeles",
+  "Asia/Singapore",
+  "Asia/Tokyo",
+  "Australia/Sydney",
+];
+
 function App() {
-  const [viewMode, setViewMode] = useState<ViewMode>("timeline");
+  const [viewMode, setViewMode] = useState<ViewMode>("schedule");
+  const [displayTimezone, setDisplayTimezone] = useState("utc");
 
   const { fromDate, selectedDate, onDateChange } = useCalendarPageStartDate();
 
@@ -175,6 +197,17 @@ function App() {
             </button>
           ),
         )}
+        <select
+          value={displayTimezone}
+          onChange={(e) => setDisplayTimezone(e.target.value)}
+          style={{ marginLeft: "auto", padding: 8, borderRadius: 4 }}
+        >
+          {timezones.map((tz) => (
+            <option key={tz} value={tz}>
+              {tz}
+            </option>
+          ))}
+        </select>
       </div>
       <div style={{ flex: 1 }}>
         <Eventcalendar
@@ -185,6 +218,7 @@ function App() {
           timezonePlugin={luxonTimezone}
           view={view}
           dataTimezone="utc"
+          displayTimezone={displayTimezone}
           timeFormat="HH:mm"
           showControls={true}
           clickToCreate={true}

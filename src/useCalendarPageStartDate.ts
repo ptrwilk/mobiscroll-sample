@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import { useCallback, useState } from "react";
-import { MbscSelectedDateChangeEvent } from "@mobiscroll/react-next";
+import { MbscSelectedDateChangeEvent } from "@mobiscroll/react";
 import { DateTime } from "luxon";
 
 const useCalendarPageStartDate = () => {
